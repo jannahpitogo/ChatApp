@@ -1,3 +1,31 @@
+const ws = new WebSocket(`ws://localhost:3000`);
+
+ws.onmessage = (event) => {
+  const messages = JSON.parse(event.data);
+  const messageContainer = document.getElementById("message-display");
+
+  messageContainer.innerHTML = messages
+    .map(
+      (m) => `<div style="margin:8px;">
+              <p style="margin:0; padding:0; display:flex"><strong>${m.user}:</strong> ${m.message}</p>
+              <p style="font-size: 13px; margin:0; padding:0; display:flex">${m.time}</p>
+              </div>`,
+    )
+    .join("");
+};
+
+const sendMessageForm = document.getElementById("send-message-form");
+sendMessageForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const message = document.getElementById("message-from-user").value;
+  const user = nameInputArea.value;
+  const time = new Date(Date.now()).toLocaleString();
+
+  ws.send(JSON.stringify({ message, user, time }));
+  sendMessageForm.reset();
+});
+
 const submitName = document.getElementById("submit-name");
 const firstPage = document.getElementById("first-page");
 const chatPage = document.getElementById("chat-page");
@@ -12,56 +40,56 @@ submitName.addEventListener("click", (event) => {
   userName.textContent = `Welcome to the chat ${nameInputArea.value}`;
 });
 
-const sendMessageForm = document.getElementById("send-message-form");
+// const sendMessageForm = document.getElementById("send-message-form");
 
-sendMessageForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
+// sendMessageForm.addEventListener("submit", async (event) => {
+//   event.preventDefault();
 
-  const message = document.getElementById("message-from-user").value;
-  const user = nameInputArea.value;
-  const time = new Date(Date.now()).toLocaleString();
+//   const message = document.getElementById("message-from-user").value;
+//   const user = nameInputArea.value;
+//   const time = new Date(Date.now()).toLocaleString();
 
-  const res = await fetch("/newmessage", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message,
-      user,
-      time,
-    }),
-  });
+//   const res = await fetch("/newmessage", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       message,
+//       user,
+//       time,
+//     }),
+//   });
 
-  const data = await res.text();
-  sendMessageForm.reset();
-  await displayMessage();
+//   const data = await res.text();
+//   sendMessageForm.reset();
+//   await displayMessage();
 
-  return data;
-});
+//   return data;
+// });
 
-async function displayMessage() {
-  try {
-    const response = await fetch("/messages");
-    if (!response.ok) throw new Error("Server error");
+// async function displayMessage() {
+//   try {
+//     const response = await fetch("/messages");
+//     if (!response.ok) throw new Error("Server error");
 
-    const messages = await response.json();
+//     const messages = await response.json();
 
-    const messageContainer = document.getElementById("message-display");
-    messageContainer.innerHTML = messages
-      .map(
-        (m) => `<div style="margin:8px;">
-              <p style="margin:0; padding:0; display:flex"><strong>${m.user}:</strong> ${m.message}</p>
-              <p style="font-size: 13px; margin:0; padding:0; display:flex">${m.time}</p>
-              </div>`,
-      )
-      .join("");
-  } catch (error) {
-    document.getElementById("message-display").textContent = "Connection error";
-  }
-}
+//     const messageContainer = document.getElementById("message-display");
+//     messageContainer.innerHTML = messages
+//       .map(
+//         (m) => `<div style="margin:8px;">
+//               <p style="margin:0; padding:0; display:flex"><strong>${m.user}:</strong> ${m.message}</p>
+//               <p style="font-size: 13px; margin:0; padding:0; display:flex">${m.time}</p>
+//               </div>`,
+//       )
+//       .join("");
+//   } catch (error) {
+//     document.getElementById("message-display").textContent = "Connection error";
+//   }
+// }
 
-window.onload = () => {
-  displayMessage();
-  setInterval(displayMessage, 3000);
-};
+// window.onload = () => {
+//   displayMessage();
+//   setInterval(displayMessage, 3000);
+// };

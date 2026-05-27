@@ -19,6 +19,7 @@ sendMessageForm.addEventListener("submit", async (event) => {
 
   const message = document.getElementById("message-from-user").value;
   const user = nameInputArea.value;
+  const time = new Date(Date.now()).toLocaleString();
 
   const res = await fetch("/newmessage", {
     method: "POST",
@@ -28,6 +29,7 @@ sendMessageForm.addEventListener("submit", async (event) => {
     body: JSON.stringify({
       message,
       user,
+      time,
     }),
   });
 
@@ -47,7 +49,12 @@ async function displayMessage() {
 
     const messageContainer = document.getElementById("message-display");
     messageContainer.innerHTML = messages
-      .map((m) => `<p><strong>${m.user}:</strong> ${m.message}</p>`)
+      .map(
+        (m) => `<div style="margin:8px;">
+              <p style="margin:0; padding:0; display:flex"><strong>${m.user}:</strong> ${m.message}</p>
+              <p style="font-size: 13px; margin:0; padding:0; display:flex">${m.time}</p>
+              </div>`,
+      )
       .join("");
   } catch (error) {
     document.getElementById("message-display").textContent = "Connection error";

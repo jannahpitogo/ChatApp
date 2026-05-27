@@ -10,6 +10,7 @@ const messages = [
   {
     message: "Hello, I am Jannah",
     user: "Jannah",
+    time: "5/27/2025, 10:00:00 AM",
   },
 ];
 
@@ -18,9 +19,9 @@ app.get("/messages", (req, res) => {
 });
 
 app.post("/newmessage", (req, res) => {
-  const { message, user } = req.body;
+  const { message, user, time } = req.body;
 
-  if (!message || !user) {
+  if (!message || !user || !time) {
     res.status(400).send("Message or user is missing");
     return res;
   }
@@ -28,6 +29,7 @@ app.post("/newmessage", (req, res) => {
   messages.push({
     message,
     user,
+    time,
   });
   res.send("ok");
 });

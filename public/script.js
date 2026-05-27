@@ -1,4 +1,5 @@
-const ws = new WebSocket(`ws://localhost:3000`);
+const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+const ws = new WebSocket(`${protocol}//${window.location.host}`);
 
 ws.onmessage = (event) => {
   const messages = JSON.parse(event.data);
@@ -17,7 +18,6 @@ ws.onmessage = (event) => {
     })
     .join("");
 
-  
   messageContainer.scrollTop = messageContainer.scrollHeight;
 };
 
@@ -45,7 +45,7 @@ submitName.addEventListener("click", (event) => {
   firstPage.style.display = "none";
   chatPage.style.display = "block";
   userName.textContent = `Chat — ${nameInputArea.value}`;
-  
+
   const avatar = document.querySelector(".avatar");
   if (avatar)
     avatar.textContent = nameInputArea.value

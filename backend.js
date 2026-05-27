@@ -6,7 +6,6 @@ const port = 3000;
 app.use(express.json());
 app.use(express.static("public"));
 
-let messageIndex = 0;
 const messages = [
   {
     message: "Hello, I am Jannah",
@@ -14,24 +13,21 @@ const messages = [
   },
 ];
 
-app.get("/message", (req, res) => {
-  res.send(`${messages[messageIndex].user}: ${messages[messageIndex].message}`);
+app.get("/messages", (req, res) => {
+  res.json(messages);
 });
 
 app.post("/newmessage", (req, res) => {
-  const body = req.body;
+  const { message, user } = req.body;
 
-  if (typeof body != "object" || !("message" in body) || !("user" in body)) {
-    res
-      .status(400)
-      .send("Expected body to be a JSON object containing keys message");
+  if (!message || !user) {
+    res.status(400).send("Message or user is missing");
     return res;
   }
 
-  messageIndex++;
   messages.push({
-    message: body.message,
-    user: body.user,
+    message,
+    user,
   });
   res.send("ok");
 });

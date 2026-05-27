@@ -40,19 +40,21 @@ sendMessageForm.addEventListener("submit", async (event) => {
 
 async function displayMessage() {
   try {
-    const response = await fetch("/message");
-
+    const response = await fetch("/messages");
     if (!response.ok) throw new Error("Server error");
 
-    const messageByUser = await response.text();
+    const messages = await response.json();
 
     const messageContainer = document.getElementById("message-display");
-    const newMess = document.createElement("p");
-    newMess.textContent = messageByUser;
-    messageContainer.appendChild(newMess);
+    messageContainer.innerHTML = messages
+      .map((m) => `<p><strong>${m.user}:</strong> ${m.message}</p>`)
+      .join("");
   } catch (error) {
     document.getElementById("message-display").textContent = "Connection error";
   }
 }
 
-window.onload = displayMessage;
+window.onload = () => {
+  displayMessage();
+  setInterval(displayMessage, 3000);
+};

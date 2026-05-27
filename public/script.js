@@ -5,25 +5,33 @@ ws.onmessage = (event) => {
   const messageContainer = document.getElementById("message-display");
 
   messageContainer.innerHTML = messages
-    .map(
-      (m) => `<div style="margin:8px;">
-              <p style="margin:0; padding:0; display:flex"><strong>${m.user}:</strong> ${m.message}</p>
-              <p style="font-size: 13px; margin:0; padding:0; display:flex">${m.time}</p>
-              </div>`,
-    )
+    .map((m) => {
+      const side =
+        nameInputArea && m.user === nameInputArea.value ? "right" : "left";
+      return `
+        <div class="message ${side}">
+          <div class="body">${m.message}</div>
+          <div class="meta">${m.user} • ${m.time}</div>
+        </div>
+      `;
+    })
     .join("");
+
+  
+  messageContainer.scrollTop = messageContainer.scrollHeight;
 };
 
 const sendMessageForm = document.getElementById("send-message-form");
 sendMessageForm.addEventListener("submit", (event) => {
   event.preventDefault();
-
-  const message = document.getElementById("message-from-user").value;
-  const user = nameInputArea.value;
+  const messageInput = document.getElementById("message-from-user");
+  const message = messageInput.value.trim();
+  if (!message) return;
+  const user = nameInputArea.value || "Anonymous";
   const time = new Date(Date.now()).toLocaleString();
 
   ws.send(JSON.stringify({ message, user, time }));
-  sendMessageForm.reset();
+  messageInput.value = "";
 });
 
 const submitName = document.getElementById("submit-name");
@@ -36,9 +44,23 @@ submitName.addEventListener("click", (event) => {
   event.preventDefault();
   firstPage.style.display = "none";
   chatPage.style.display = "block";
-
-  userName.textContent = `Welcome to the chat ${nameInputArea.value}`;
+  userName.textContent = `Chat — ${nameInputArea.value}`;
+  
+  const avatar = document.querySelector(".avatar");
+  if (avatar)
+    avatar.textContent = nameInputArea.value
+      ? nameInputArea.value.charAt(0).toUpperCase()
+      : "A";
 });
+
+function escapeHtml(unsafe) {
+  return String(unsafe)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 // const sendMessageForm = document.getElementById("send-message-form");
 

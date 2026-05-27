@@ -8,13 +8,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.static("public"));
 
-const messages = [
-  {
-    message: "Hello, I am Jannah",
-    user: "Jannah",
-    time: "5/27/2025, 10:00:00 AM",
-  },
-];
+const messages = [];
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
@@ -24,10 +18,19 @@ wss.on("connection", (ws) => {
 
   ws.on("message", (data) => {
     const { message, user, time } = JSON.parse(data);
+
+    if (!message || !user || !time) {
+      res.status(400).send("Message or user is missing");
+      return res;
+    }
+
+    const cleanMessage = message.replace(/<[^>]*>/g, "");
+    const cleanUser = user.replace(/<[^>]*>/g, "");
+
     messages.push({
-      message,
-      user,
-      time,
+      message: cleanMessage,
+      user: cleanUser,
+      time
     });
     wss.clients.forEach((client) => {
       client.send(JSON.stringify(messages));

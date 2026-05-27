@@ -21,18 +21,26 @@
         </form>
     </div>
 
-    <div class="container" id="chat-page" style="display: none;">
-        <h1>Chat Page</h1>
-        <p id="name-display">Welcome to the chat!</p>
+    <div id="chat-page" style="display: none;">
+        <div class="chat-card">
+            <div class="chat-header">
+                <div class="avatar">A</div>
+                <div class="header-info">
+                    <div class="name" id="name-display">ChatApplication</div>
+                </div>
+            </div>
 
-        <div id="message-display">
+            <div class="messages" id="message-display">
 
+            </div>
+
+            <div class="composer">
+                <form id="send-message-form">
+                    <input type="text" name="message" id="message-from-user" placeholder="Type a message here">
+                    <button class="send">➤</button>
+                </form>
+            </div>
         </div>
-
-        <form id="send-message-form">
-            <input type="text" name="message" id="message-from-user" placeholder="Type your message">
-            <button>Send</button>
-        </form>
     </div>
 
 

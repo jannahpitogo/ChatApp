@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!--CSS LINK-->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="container" id="first-page">
+        <h1>Welcome to ChatApplication</h1>
+        <form>
+            <p>Please insert your name</p>
+            <input name="name" id="name-input" type="text">
+            <button id="submit-name">Submit</button>
+        </form>
+    </div>
+
+    <div class="container" id="chat-page" style="display: none;">
+        <h1>Chat Page</h1>
+        <p id="name-display">Welcome to the chat!</p>
+
+        <div id="message-display">
+
+        </div>
+
+        <form id="send-message-form">
+            <input type="text" name="message" id="message-from-user" placeholder="Type your message">
+            <button>Send</button>
+        </form>
+    </div>
+
+
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>
